@@ -1,42 +1,366 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Enhanced Todo App CSS */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
 }
 
-@keyframes logo-spin {
+/* Animated background particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.06) 1.5px, transparent 1.5px);
+  animation: float 20s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(10px) rotate(-1deg); }
+}
+
+/* Main app container */
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+/* Glassmorphism effect */
+.app-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+@keyframes slideUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 32px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.app-title {
+  font-size: 2.2rem;
+  font-weight: 300;
+  letter-spacing: 3px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Todo list container */
+.todo-list {
+  padding: 24px;
+  min-height: 200px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar */
+.todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 3px;
+}
+
+.todo-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* Individual todo item */
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  border-left: 4px solid #e9ecef;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.todo-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.todo-item:hover::before {
+  left: 100%;
+}
+
+.todo-item:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(102, 126, 234, 0.1);
+  border-left-color: #667eea;
+}
+
+.todo-item.completed {
+  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+  border-left-color: #28a745;
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.todo-item.completed:hover {
+  transform: translateY(-1px) scale(1);
+}
+
+/* Checkbox styling */
+.todo-checkbox {
+  width: 22px;
+  height: 22px;
+  margin-right: 16px;
+  cursor: pointer;
+  accent-color: #667eea;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.todo-checkbox:hover {
+  transform: scale(1.2);
+}
+
+.todo-checkbox:checked {
+  transform: scale(1.1);
+  accent-color: #28a745;
+}
+
+/* Title text */
+.todo-title {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  flex: 1;
+  user-select: none;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.todo-title.completed {
+  text-decoration: line-through;
+  color: #6c757d;
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+/* Completed indicator */
+.todo-item.completed::after {
+  content: '✓';
+  position: absolute;
+  right: 20px;
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.4rem;
+  opacity: 0.8;
+  animation: checkmark 0.4s ease-in-out;
+}
+
+@keyframes checkmark {
+  0% { 
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% { 
+    opacity: 0.8;
+    transform: scale(1) rotate(360deg);
   }
 }
 
-.card {
-  padding: 2em;
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 
-.read-the-docs {
-  color: #888;
+.empty-state::before {
+  content: '📝';
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Progress indicator */
+.progress-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.4s ease;
+  border-radius: 0 0 3px 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+  
+  .app-container {
+    max-width: 100%;
+    border-radius: 20px;
+    margin: 0;
+  }
+  
+  .app-header {
+    padding: 24px 20px;
+  }
+  
+  .app-title {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+  
+  .todo-list {
+    padding: 20px;
+    max-height: 50vh;
+  }
+  
+  .todo-item {
+    padding: 14px 16px;
+    margin: 10px 0;
+  }
+  
+  .todo-title {
+    font-size: 1rem;
+  }
+  
+  .todo-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+  }
+  
+  .todo-item {
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+  
+  .todo-title {
+    font-size: 0.95rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  }
+  
+  .app-container {
+    background: rgba(30, 30, 46, 0.95);
+    color: #e0e0e0;
+  }
+  
+  .todo-item {
+    background: linear-gradient(135deg, #2a2a3e 0%, #323248 100%);
+    color: #e0e0e0;
+  }
+  
+  .todo-title {
+    color: #e0e0e0;
+  }
 }
